@@ -1,0 +1,115 @@
+
+#include <iostream>
+using namespace std;
+class Pizza {
+private:
+	int size, nailao, xiangchang, huotui;//尺寸，奶酪，香肠，火腿
+	double price;
+public:
+	Pizza();
+	double calcCost();//价格
+};
+Pizza::Pizza() {
+	price = size = nailao = xiangchang = huotui = 0;
+	cout << "请输入您需要的披萨尺寸（1=小，2=中，3=大；配料数量（依次输入奶酪，香肠，火腿））" << endl;
+	cin >> size;//1代表 小，，2代表中，，3 代表 大
+	while (size > 3 || size < 1)
+	{
+		cout << "请重新输入披萨尺寸：";
+		cin >> size;
+	}
+	cin >> xiangchang >> huotui >> nailao;//奶酪的数量 下面同理
+	switch (size) {
+	case 1: price = double(10) + double(2 * (nailao + xiangchang + huotui)); break;
+	case 2: price = double(12) + double(2 * (nailao + xiangchang + huotui)); break;
+	case 3: price = double(14) + double(2 * (nailao + xiangchang + huotui)); break;
+	}
+
+}
+double Pizza::calcCost() {
+	switch (size) {
+	case 1:cout << "您的披萨价格为：" << price << "美元" << endl; break;
+	case 2:cout << "您的披萨价格为：" << price << "美元" << endl; break;
+	case 3:cout << "您的披萨价格为：" << price << "美元" << endl; break;
+	}
+	return price;
+}
+class Pizzaorder {
+private:
+	Pizza* Pizzas[3];
+	int numbers;//总数量
+	double sum;//总金额
+public:
+	Pizzaorder();
+	Pizzaorder(Pizzaorder& a);//复制构造函数  深拷贝
+	int getNumPizzas();//返回订单中披萨个数
+	Pizza* getPizza1();//返回第一个披萨的,没有则返回NULL
+	Pizza* getPizza2();
+	Pizza* getPizza3();
+	void setNumPizzas(int a);
+	void setPizza1(Pizza*);
+	void setPizza2(Pizza*);
+	void setPizza3(Pizza*);
+	double calcTotal();
+};
+Pizzaorder::Pizzaorder() {
+	Pizzas[0] = NULL; Pizzas[1] = NULL; Pizzas[2] = NULL; //置空
+	numbers = 0; sum = 0;
+}
+//复制订单
+Pizzaorder::Pizzaorder(Pizzaorder& a) {
+	Pizzas[0] = a.Pizzas[0];
+	Pizzas[1] = a.Pizzas[1];
+	Pizzas[2] = a.Pizzas[2];
+	numbers = a.numbers;
+	sum = a.sum;
+}
+int Pizzaorder::getNumPizzas() {
+	int i;
+	numbers = 0;
+	for (i = 0; i < 3; i++) {
+		if ((*(Pizzas + i)) != NULL) numbers += 1;
+	}
+	cout << "订单中的披萨个数为：" << numbers << endl;
+	return numbers; //数量
+}
+Pizza* Pizzaorder::getPizza1() {
+	return Pizzas[0];
+}
+Pizza* Pizzaorder::getPizza2() {
+	return Pizzas[1];
+}
+Pizza* Pizzaorder::getPizza3() {
+	return Pizzas[2];
+}
+void Pizzaorder::setNumPizzas(int a) {
+	numbers = a;
+}
+void Pizzaorder::setPizza1(Pizza* a) {
+	Pizzas[0] = a;
+}
+void Pizzaorder::setPizza2(Pizza* a) {
+	Pizzas[1] = a;
+}
+void Pizzaorder::setPizza3(Pizza* a) {
+	Pizzas[2] = a;
+}
+double Pizzaorder::calcTotal() {
+	int i;
+	for (i = 0; i < 3; i++)
+	{
+		if (Pizzas[i] != NULL) sum = sum + Pizzas[i]->calcCost();
+	}
+	cout << "订单总共价格为:" << sum << endl;
+	return sum;
+}
+int main() {
+	Pizza my, we;
+	Pizzaorder one;
+	one.setNumPizzas(2);
+	one.setPizza1(&my);
+	one.setPizza2(&we);
+	Pizzaorder two(one);
+	one.getNumPizzas();
+	two.getNumPizzas();
+}
