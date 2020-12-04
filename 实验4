@@ -1,0 +1,64 @@
+#include<fstream>
+#include<iostream>
+#include<string>
+#include<cstring>
+using namespace std;
+int same(char b[]) {
+	char a[100]; 
+	strcpy_s(a, b);//之所以不直接用b，怕排序打乱顺序，，他们指向的是同一个地址，会对原始字符串修改
+	int i, j, k, same = 0, key = 0;
+	char temp;  
+	int len = strlen(a);  //字符串长度,无'\0'
+	for (i = 0; i < len; i++) {
+		k = i;//选择排序
+		for (j = i + 1; j < len; j++) {
+			if (a[k] > a[j])  k = j;
+		}
+		if (k != i) {
+			temp = a[k];
+			a[k] = a[i];
+			a[i] = temp;
+		}
+	}
+	//利用双重循环解决重复字母出现次数
+	for (i = 0; i < len; i = j)
+	{
+		for (j = i; j < len; j++) {
+			if (a[j] == a[j + 1])
+			{
+				key++;  //标志，  有相同就 不是0；
+				continue;  //前后一致 就 持续 
+			}
+			j++; break;  //直到某次，在边界， a[j]！=a[j+1]，那么将j指到j+1，也就是不同的字母的开始，i直接跳到j的地方
+		}
+		if (key != 0) same++;  //利用标志判断出  当前字母是否有相同对，，有的话same++
+		key = 0;  //清零，为下一个字母做准备
+	}
+	return same;    //字母对个数
+}
+int main() {
+	char str[100] = { 0 }; //初始化
+	int max = 0, t, len;
+	char* temp = new char[10]; 
+	ifstream infile("words.txt");  //读取文本文件
+	if (infile.fail())
+	{
+		cout << "open file error" << endl;  //失败
+		return -1;
+	}
+	while (infile.getline(str, sizeof(str), '\n'))  //获取一行
+	{
+		t = same(str);//返回 相同字母对个数
+		len = strlen(str);  //该行 字符串长度，不包括'\0'
+		if (t > max)
+		{
+			max = t;  //更新 最大字母对
+			strcpy_s(temp, len + 1, str);//每次遇到 相同字母对 最多的字符串，就 把temp换成当前 字符串
+		}   //strcpy_s函数 会自动 对齐temp 和 str（长度，内容全部一致）
+	}
+	fstream outfile("file.txt", ios::out | ios::app);
+	outfile << temp;
+	cout << temp;  //最多字母 对的字符串
+	infile.close();
+	return 0;
+}
