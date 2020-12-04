@@ -1,0 +1,101 @@
+//实验3.1
+/*
+#include <iostream>
+using namespace std;
+class Point {
+private:
+	double _x,_y;
+public:
+	Point(double a,double b);
+	Point& operator++();//前置
+	Point& operator--();
+	void Print();
+};
+Point::Point(double a=0, double b=0) {
+	_x = a; _y = b;
+}
+Point& Point::operator++() {
+	_x++; _y++; return *this;
+}
+Point& Point::operator--() {
+	_x--; _y--; return *this;
+}
+void Point::Print() {
+	cout << "(" << _x << "," << _y << ")" << endl;
+}
+int main() {
+	Point a(2, 3);
+	--a; ++a;
+	a.Print();
+}*/
+//实验3.2
+#include<iostream>
+#include<cstring>
+using namespace std;
+class CRole {
+protected:
+	 char *name;
+public:
+	CRole(); //初始化
+	virtual void printinfo()=0; //虚函数，派生类自行定义
+	~CRole();
+};
+CRole::CRole() {
+	name = NULL;
+}
+CRole::~CRole() {
+	delete[]name; //析构
+}
+//飞机
+class Cplane:public CRole {
+public:
+	Cplane(const char*a);
+	void printinfo();
+};
+Cplane::Cplane(const char* a) {
+	int len;  //储存长度
+	len=strlen(a);//strlen 不返回最后一个 "\0"
+	name = new char[len++];  // 创建空间
+	strcpy_s(name,len,a);
+}
+void Cplane::printinfo() {
+	cout << "Cplane" << "_____" << name<<endl;
+}
+//坦克
+class CTank :public CRole {
+public:
+	CTank(const char* a);
+	void printinfo();
+};
+CTank::CTank(const char* a) {
+	int len;
+	len = strlen(a);
+	name = new char[len + 1];
+	strcpy_s(name, len + 1, a);
+}
+void CTank::printinfo() {
+	cout << "CTank" << "_____" << name << endl;
+}
+//子弹
+class CBullet :public CRole {
+public:
+	CBullet(const char* a);
+	void printinfo();
+};
+CBullet::CBullet(const char* a) {
+	int len;
+	len = strlen(a);
+	name = new char[len + 1];
+	strcpy_s(name, len + 1, a);
+}
+void CBullet::printinfo() {
+	cout << "CBullet" << "_____" << name << endl;
+}
+int main() {
+	int x = 0;
+	Cplane ab("ab"), bc("bc"), cd("cd");
+	CTank de("de"), ef("ef");
+	CBullet fg("fg"), gh("gh"), hi("hi"), ij("ij"), jk("jk"), kl("kl"), lm("lm"), mn("mn"), no("no"), op("op");
+	CRole* ptr[15] = { &ab,&bc,&cd,&de,&ef,&fg,&gh,&hi,&ij,&jk,&kl,&lm,&mn,&no,&op }; //必须用指针数组，基类是抽象类，不能用实例化
+	for (x = 0; x < 15; x++) ptr[x]->printinfo();
+}
