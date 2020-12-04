@@ -1,0 +1,84 @@
+
+#include <iostream>
+using namespace std;
+class test1 {
+private:
+	int* int_a, * count_b;  //int_a 是 被测试的数组，count_b是记录每个 不重复的数字重复了几次。
+	int number_i, count_t;//数组总共元素个数/不同元素出现次数
+public:
+	test1();
+	void swap(int& a, int& b);//交换a,b
+	void sort();
+	int count();
+	void print();
+};
+test1::test1() {
+	number_i = 0;//元素个数
+	do
+	{
+		cout << "请输入数组元素个数：";
+		cin >> number_i;
+		if (number_i > 50) cout << "元素个数不能大于50";
+		cout << endl;
+	} while (number_i > 50);
+	int_a = new int[number_i];
+	cout << "请输入数组元素:";
+	for (int i = 0; i < number_i; i++)
+		cin >> int_a[i];
+}
+//交换函数
+void test1::swap(int& a, int& b) {
+	int t;
+	t = a;
+	a = b;
+	b = t;
+}
+//实现从大到小的排序 （选择排序）
+void test1::sort() {
+	int i = 0, j = 0, k = 0;
+	for (i = 0; i < number_i; i++)
+	{
+		k = i;
+		for (j = i + 1; j < number_i; j++)
+			if (int_a[j] > int_a[k]) k = j; //记录每次的最大值
+		if (int_a[k] != int_a[i]) swap(int_a[k], int_a[i]);  // 将大的 放到前面 
+	}
+}
+//数字出现个数(已排序)
+int test1::count() {
+	int i = 0, k = 0, t = 0, times;//k是下一组重复数字的第一个的下标，t是总共有几个不重复的数字出现
+	for (i; i < number_i; i = k)
+	{
+		while ((i < number_i - 1) && int_a[i] == int_a[i + 1]) i++;
+		k = i + 1; t++;//更新k的下标， 每多一个数字就t++
+	}
+	count_b = new int[t];//count_b 数组大小代表不重复出现的数字个数，而元素是重复出现数字个数
+	k = 0;
+	times = t;
+	t = 0;
+	for (i = 0; i < number_i; i = k) {
+		int sum = 1;
+		while ((i < number_i - 1) && int_a[i] == int_a[i + 1])
+		{
+			sum++; i++;
+		}
+		count_b[t++] = sum;   //count_b这个数字表示从最大的数开始，每个数出现的个数
+		k = i + 1;
+	}
+	return count_t = times;  //返回出现次数
+}
+void test1::print() {
+	int i = 0, t = 0;
+	cout << "N" << "		Count" << endl;
+	for (i; i < number_i; i) {
+		cout << int_a[i] << "		";
+		cout << count_b[t] << endl;
+		i = i + count_b[t]; t++;   //i每次更新到 不重复的第一个元素
+	}
+}
+int main() {
+	test1 one;
+	one.sort();
+	one.count();
+	one.print();
+}
