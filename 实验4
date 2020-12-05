@@ -1,3 +1,4 @@
+//版本1，解决非相邻字母对出现最多的问题
 #include<fstream>
 #include<iostream>
 #include<string>
